@@ -6,13 +6,12 @@ import re
 from collections import defaultdict
 
 script_dir = os.path.dirname(__file__)
-
 inputs = []
 with open(os.path.join(script_dir,'input.txt'), 'r') as f:
   inputs = f.read().splitlines()
-regex = r"(\d*)\s\@\s(\d*),(\d*)\:\s(\d*)x(\d*)"
 
 def run(inputs):
+    regex = r"(\d*)\s\@\s(\d*),(\d*)\:\s(\d*)x(\d*)"
     fabric = defaultdict(lambda: defaultdict(set))
     all_ids = set()
     overlaping_ids = set()
