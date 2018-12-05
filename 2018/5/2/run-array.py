@@ -46,4 +46,4 @@ def run(s):
 
     return min_str
 
-print('min:', run(inputs[0]))
+print('found min:', run(inputs[0]))

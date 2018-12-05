@@ -26,6 +26,4 @@ def run(s):
 
     return len(s)
 
-print(run("dabAcCaCBAcCcaDA"))
-print(run("pQqGgPzZWwSoOsgYLfFjJlypPGXxdDGhHBFfbLlcCGghHNnBbl"))
 print(run(inputs[0]))
