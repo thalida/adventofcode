@@ -1,10 +1,6 @@
 # https://adventofcode.com/2018/day/_d
 
-import pprint
 import os
-import functools
-import re
-from collections import defaultdict
 
 script_dir = os.path.dirname(__file__)
 inputs = []
