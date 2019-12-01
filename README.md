@@ -1,5 +1,4 @@
-# Advent of Code
-https://adventofcode.com/
+# https://adventofcode.com/
 
 ```
                                   ______________________
@@ -45,7 +44,6 @@ https://adventofcode.com/
 
 ```
 
-## ascii art source
 ```
 ------------------------------------------------
 Thank you for visiting https://asciiart.website/
