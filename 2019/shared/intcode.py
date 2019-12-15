@@ -25,9 +25,10 @@ class Intcode():
   EXIT_CODES = {
     'EXIT': 'exit',
     'OUTPUT': 'output',
+    'INPUT': 'input',
   }
 
-  def __init__(self, program, pointer=0, outputs=[], relative_base=0, enable_exit_on_output=False):
+  def __init__(self, program, pointer=0, outputs=[], relative_base=0, enable_user_input=False, enable_exit_on_output=False):
     if isinstance(program, str):
       program = program.split(',')
 
@@ -38,8 +39,9 @@ class Intcode():
     self.pointer = pointer
     self.outputs = outputs.copy()
     self.relative_base = relative_base
+    self.enable_user_input = enable_user_input
     self.enable_exit_on_output = enable_exit_on_output
-    self.has_pending_output = False
+    self.has_pending_exit = False
     self.exit_code = None
 
   def get_program_value(self, index, default_value=0):
@@ -75,6 +77,10 @@ class Intcode():
 
     return inputs[0] if len(inputs) == 1 else inputs
 
+  def write_value(self, index, value):
+    self.program[index] = value
+    return self.program
+
   def run(self, input_val=None, debug=False):
     while self.pointer < len(self.program):
       instruction = str(self.program[self.pointer])
@@ -93,21 +99,29 @@ class Intcode():
         self.exit_code = self.EXIT_CODES['EXIT']
         return
 
-      if self.enable_exit_on_output and self.has_pending_output:
-        self.has_pending_output = False
+      if self.enable_exit_on_output and self.has_pending_exit:
+        self.has_pending_exit = False
         self.exit_code = self.EXIT_CODES['OUTPUT']
         return
 
       if optcode == self.INSTRUCTIONS['INPUT']:
+        if input_val is None and self.enable_user_input:
+          self.exit_code = self.EXIT_CODES['INPUT']
+          return
+
         write_index = self.get_program_write_index(self.pointer + 1, modes[0])
         self.program[write_index] = input_val
         self.pointer += 2
+
+        if self.enable_user_input:
+          input_val = None
+
         continue
 
       if optcode == self.INSTRUCTIONS['OUTPUT']:
         result = self.get_instruction_inputs(modes, num_inputs=1, debug=debug)
         self.outputs.append(result)
-        self.has_pending_output = self.enable_exit_on_output
+        self.has_pending_exit = self.enable_exit_on_output
         self.pointer += 2
         continue
 
