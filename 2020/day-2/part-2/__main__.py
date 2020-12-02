@@ -40,9 +40,8 @@ def process(inputs):
   return num_valid
 
 
-def main():
-  inputs = get_inputs(SCRIPT_DIR, INPUT_FILENAME)
-  answer = process(inputs)
-  print(f'answer:', answer)
+inputs = get_inputs(SCRIPT_DIR, INPUT_FILENAME)
+answer = process(inputs)
+print(f'answer:', answer)
 
-  assert answer == 280
+assert answer == 280

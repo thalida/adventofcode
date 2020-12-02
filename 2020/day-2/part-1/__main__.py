@@ -36,9 +36,9 @@ def process(inputs):
 
   return num_valid
 
-def main():
-  inputs = get_inputs(SCRIPT_DIR, INPUT_FILENAME)
-  answer = process(inputs)
-  print(f'answer:', answer)
 
-main()
+inputs = get_inputs(SCRIPT_DIR, INPUT_FILENAME)
+answer = process(inputs)
+print(f'answer:', answer)
+
+assert answer == 378

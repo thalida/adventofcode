@@ -19,9 +19,8 @@ def process(inputs):
   outputs = inputs.copy()
   return outputs
 
-def main():
-  inputs = get_inputs(SCRIPT_DIR, INPUT_FILENAME)
-  answer = process(inputs)
-  print(f'answer:', answer)
+inputs = get_inputs(SCRIPT_DIR, INPUT_FILENAME)
+answer = process(inputs)
+print(f'answer:', answer)
 
-main()
+# assert answer
