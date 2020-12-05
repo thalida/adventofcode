@@ -44,35 +44,19 @@ def process(inputs):
   start_row = 0
   end_row = max_rows
 
-  seat_nums = []
+  seat_nums = set()
   for input in inputs:
     seat_num = get_seat(input)
-    seat_nums.append(seat_num)
+    seat_nums.add(seat_num)
 
-  missing_seats = []
+  sorted_seats = sorted(seat_nums)
   found_seat = None
-  for seat in seat_nums:
-    prev_seat = seat - 1
-    next_seat = seat + 1
-    found_prev = prev_seat in seat_nums
-    found_next = next_seat in seat_nums
-
-    if found_prev and found_next:
+  for i, seat in enumerate(sorted_seats):
+    if seat + 1 == sorted_seats[i + 1]:
       continue
 
-    if not found_prev:
-      if prev_seat in missing_seats:
-        found_seat = prev_seat
-        break
-
-      missing_seats.append(prev_seat)
-
-    if not found_next:
-      if next_seat in missing_seats:
-        found_seat = next_seat
-        break
-
-      missing_seats.append(next_seat)
+    found_seat = seat + 1
+    break
 
   return found_seat
 
