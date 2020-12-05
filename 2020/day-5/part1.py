@@ -19,39 +19,29 @@ def get_inputs(filename=INPUT_FILENAME):
   return inputs
 
 
-def get_row(input, start, end):
-  char = input[0]
-  middle = (start + end) / 2
-  if char == 'F':
-    return get_row(input[1:], start, math.floor(middle))
-  elif char == 'B':
-    return get_row(input[1:], math.ceil(middle), end)
-  else:
-    return start, input
+def get_seat(input):
+  rows = list(range(0, 128))
+  seats = list(range(0, 8))
 
+  for ch in input:
+    row_middle = int(len(rows) / 2)
+    seat_middle = int(len(seats) / 2)
 
-def get_seat(input, start, end):
-  if len(input) == 0:
-    return start
+    if ch == 'F':
+      rows = rows[:row_middle]
+    elif ch == 'B':
+      rows = rows[row_middle:]
+    elif ch == 'L':
+      seats = seats[:seat_middle]
+    elif ch == 'R':
+      seats = seats[seat_middle:]
 
-  char = input[0]
-  middle = (start + end) / 2
-  if char == 'L':
-    return get_seat(input[1:], start, math.floor(middle))
-  elif char == 'R':
-    return get_seat(input[1:], math.ceil(middle), end)
+  return rows[0] * 8 + seats[0]
 
 def process(inputs):
-  max_rows = 128
-  start_row = 0
-  end_row = max_rows
-
   seat_nums = []
-
   for input in inputs:
-    row, seats = get_row(input, 0, 127)
-    seat = get_seat(seats, 0, 7)
-    seat_num = row * 8 + seat
+    seat_num = get_seat(input)
     seat_nums.append(seat_num)
 
   return seat_nums
