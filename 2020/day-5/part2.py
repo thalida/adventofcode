@@ -40,10 +40,6 @@ def get_seat(input):
 
 
 def process(inputs):
-  max_rows = 128
-  start_row = 0
-  end_row = max_rows
-
   seat_nums = set()
   for input in inputs:
     seat_num = get_seat(input)
