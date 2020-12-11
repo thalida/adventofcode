@@ -2,6 +2,8 @@
 
 import os
 from pprint import pprint
+
+import copy
 import itertools
 
 SCRIPT_DIR = os.path.dirname(__file__)
@@ -17,8 +19,6 @@ def get_inputs(filename=INPUT_FILENAME):
     inputs = f.read().splitlines()
 
   return inputs
-
-import copy
 
 def do_seats(rows):
   new_rows = copy.deepcopy(rows)
@@ -79,7 +79,7 @@ def process(inputs):
 
   prev_occupied = -1
   num_occupied = 0
-  loops = 0
+
   while True:
     prev_occupied = num_occupied
     seats, num_occupied = do_seats(seats)

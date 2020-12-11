@@ -3,6 +3,8 @@
 import os
 from pprint import pprint
 
+import copy
+
 SCRIPT_DIR = os.path.dirname(__file__)
 INPUT_FILENAME = 'inputs.txt'
 SAMPLE_INPUTS_FILENAME = 'inputs_sample.txt'
@@ -18,13 +20,12 @@ def get_inputs(filename=INPUT_FILENAME):
   return inputs
 
 
-def do_seats(rows, ruleOne):
-  new_rows = []
-  for y, cols in enumerate(rows):
-    new_rows.append([])
-    for x, col in enumerate(cols):
-      new_rows[y].append(col)
+def do_seats(rows):
+  new_rows = copy.deepcopy(rows)
+  new_num_occupied = 0
 
+  for y, cols in enumerate(rows):
+    for x, col in enumerate(cols):
       if col == '.':
         continue
 
@@ -52,7 +53,10 @@ def do_seats(rows, ruleOne):
       elif col == '#' and num_occupied >= 4:
         new_rows[y][x] = 'L'
 
-  return new_rows
+      if new_rows[y][x] == '#':
+        new_num_occupied += 1
+
+  return new_rows, new_num_occupied
 
 def process(inputs):
   seats = []
@@ -61,22 +65,13 @@ def process(inputs):
 
   prev_occupied = -1
   num_occupied = 0
-  ruleOne = False
-  loop = 0
+
   while True:
-    ruleOne = not ruleOne
-    seats = do_seats(seats, ruleOne)
     prev_occupied = num_occupied
-    num_occupied = 0
-    for rows in seats:
-      for col in rows:
-        if col == '#':
-          num_occupied += 1
+    seats, num_occupied = do_seats(seats)
 
     if num_occupied == prev_occupied:
       break
-
-    loop += 1
 
   return num_occupied
 
