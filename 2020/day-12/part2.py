@@ -17,71 +17,62 @@ def get_inputs(filename=INPUT_FILENAME):
 
   return inputs
 
-def calc_coords(action, amt, coords):
-  if action == 'N':
-    coords[action] += amt - coords['S']
-    coords['S'] = 0
-  elif action == 'S':
-    coords[action] += amt - coords['N']
-    coords['N'] = 0
-  elif action == 'E':
-    coords[action] += amt - coords['W']
-    coords['W'] = 0
-  elif action == 'W':
-    coords[action] += amt - coords['E']
-    coords['E'] = 0
-
-  return coords
 
 def navigate(steps):
-  waypoint_coords = {'N': 1, 'S': 0, 'E': 10, 'W': 0 }
-  ship_coords = {'N': 0, 'S': 0, 'E': 0, 'W': 0 }
-  deg_map = {'N': 0, 'E': 90, 'S': 180, 'W': 270 }
+  waypoint_coords = {'x': 10, 'y': 1 }
+  ship_coords = { 'x': 0, 'y': 0 }
+  cardinals = ['N', 'E', 'S', 'W']
+  coords_map = {'N': 'y', 'S': 'y', 'E': 'x', 'W': 'x'}
 
   for step in steps:
     action = step[0]
     amt = int(step[1:])
 
     if action == 'F':
-      for coord, val in waypoint_coords.items():
-        pos = val * amt
-        ship_coords = calc_coords(coord, pos, ship_coords)
+      ship_coords['x'] += waypoint_coords['x'] * amt
+      ship_coords['y'] += waypoint_coords['y'] * amt
       continue
 
     if action == 'R' or action == 'L':
-      new_wp_coords = {'N': 0, 'S': 0, 'E': 0, 'W': 0}
+      new_wp_coords = {'x': 0, 'y': 0}
 
       for coord, val in waypoint_coords.items():
-        if val == 0:
-          continue
+        if coord == 'y':
+          face = 'N' if val > 0 else 'S'
+        else:
+          face = 'E' if val > 0 else 'W'
 
         if action == 'R':
-          deg = deg_map[coord] + amt
+          face_idx = (cardinals.index(face) + int(amt / 90)) % 4
         elif action == 'L':
-          deg = deg_map[coord] - amt
+          face_idx = (cardinals.index(face) - int(amt / 90)) % 4
 
-        deg = deg % 360
-        face_list = list(deg_map.keys())
-        face_degs = list(deg_map.values())
-        face = face_list[face_degs.index(deg)]
+        new_face = cardinals[face_idx]
+        new_coord = coords_map[new_face]
+        new_val = abs(val)
 
-        new_wp_coords[face] = val
+        if new_face == 'S' or new_face == 'W':
+          new_val = 0 - new_val
+
+        new_wp_coords[new_coord] = new_val
 
       waypoint_coords = new_wp_coords
       continue
 
-    waypoint_coords = calc_coords(action, amt, waypoint_coords)
+    if action == 'N':
+      waypoint_coords['y'] += amt
+    elif action == 'S':
+      waypoint_coords['y'] -= amt
+    elif action == 'E':
+      waypoint_coords['x'] += amt
+    elif action == 'W':
+      waypoint_coords['x'] -= amt
 
   return ship_coords
 
 def process(inputs):
   ship_coords = navigate(inputs)
-
-  distance = 0
-  for v in ship_coords.values():
-    distance += abs(v)
-
-  return distance
+  return abs(ship_coords['x']) + abs(ship_coords['y'])
 
 
 test_inputs = get_inputs(filename=SAMPLE_INPUTS_FILENAME)

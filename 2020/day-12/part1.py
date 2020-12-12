@@ -20,7 +20,7 @@ def get_inputs(filename=INPUT_FILENAME):
 
 def navigate(steps):
   facing = 'E'
-  coords = { 'N': 0, 'S': 0, 'E': 0, 'W': 0 }
+  coords = {'x': 0, 'y': 0 }
   deg_map = { 'N': 0, 'E': 90, 'S': 180, 'W': 270 }
 
   for step in steps:
@@ -43,28 +43,20 @@ def navigate(steps):
       action = facing
 
     if action == 'N':
-      coords[action] += amt - coords['S']
-      coords['S'] = 0
+      coords['y'] += amt
     elif action == 'S':
-      coords[action] += amt - coords['N']
-      coords['N'] = 0
+      coords['y'] -= amt
     elif action == 'E':
-      coords[action] += amt - coords['W']
-      coords['W'] = 0
+      coords['x'] += amt
     elif action == 'W':
-      coords[action] += amt - coords['E']
-      coords['E'] = 0
+      coords['x'] -= amt
 
   return coords
 
 def process(inputs):
   coords = navigate(inputs)
 
-  distance = 0
-  for v in coords.values():
-    distance += abs(v)
-
-  return distance
+  return abs(coords['x']) + abs(coords['y'])
 
 
 test_inputs = get_inputs(filename=SAMPLE_INPUTS_FILENAME)
