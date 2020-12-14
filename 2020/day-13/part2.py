@@ -44,6 +44,7 @@ def process(inputs):
 
   return time % product
 
+
 assert sys.version_info >= (3, 8)
 
 test_inputs = get_inputs(filename=SAMPLE_INPUTS_FILENAME)
