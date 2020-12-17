@@ -50,32 +50,27 @@ def parse_notes(inputs):
       notes['rules'][field] = []
       for range_str in values.split(' or '):
         start, end = range_str.split('-')
-        notes['rules'][field].append([int(start), int(end)])
+        notes['rules'][field].append([int(start), int(end) + 1])
 
   return notes
 
 def process(inputs):
   notes = parse_notes(inputs)
+
   invalid_values = []
   for ticket in notes['nearby']:
     for num in ticket:
       invalid = True
 
-      for rule, ranges in notes['rules'].items():
-        if not invalid:
+      for ranges in notes['rules'].values():
+        if num in range(*ranges[0]) or num in range(*ranges[1]):
+          invalid = False
           break
-
-        for range in ranges:
-          start, end = range
-          if start <= num <= end:
-            invalid = False
-            break
 
       if invalid:
         invalid_values.append(num)
 
-  error_rate = sum(invalid_values)
-  return error_rate
+  return sum(invalid_values)
 
 
 test_inputs = get_inputs(filename=SAMPLE_INPUTS_FILENAME)

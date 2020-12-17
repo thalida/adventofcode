@@ -52,7 +52,7 @@ def parse_notes(inputs):
       notes['rules'][field] = []
       for range_str in values.split(' or '):
         start, end = range_str.split('-')
-        notes['rules'][field].append([int(start), int(end)])
+        notes['rules'][field].append([int(start), int(end)+1])
 
   return notes
 
@@ -64,11 +64,9 @@ def process(inputs):
     for i, num in enumerate(ticket):
       matching_rules = []
 
-      for rule, ranges in notes['rules'].items():
-        for range in ranges:
-          start, end = range
-          if start <= num <= end:
-            matching_rules.append(rule)
+      for field, ranges in notes['rules'].items():
+        if num in range(*ranges[0]) or num in range(*ranges[1]):
+            matching_rules.append(field)
 
       # Stop processing this ticket if a number didn't have a matching rule
       if len(matching_rules) == 0:
@@ -78,8 +76,7 @@ def process(inputs):
       if i not in overlapping_rules:
         overlapping_rules[i] = set(matching_rules)
       else:
-        # Find the intersection between the current overlapping rules and the new
-        # set of matching rules
+        # get the intersection of the overlapping rules and the new matching rules
         overlapping_rules[i] = overlapping_rules[i] & set(matching_rules)
 
 
