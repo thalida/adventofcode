@@ -17,8 +17,7 @@ maybe.
 Yours in codetry,
 thalida
 
-**Current Day:** 20
-**Partial Days:** 19
+**Current Day:** 0
 
 ```
                                       ██████████
