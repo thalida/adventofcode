@@ -11,7 +11,8 @@ But I accept I'll probably do worse
 Yours in codetry,
 thalida
 
-**Current Day:** 18
+**Current Day:** 20
+**Partial Days:** 19
 
 
 
