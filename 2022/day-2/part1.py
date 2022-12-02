@@ -19,33 +19,39 @@ def get_inputs(filename=INPUT_FILENAME):
 
 
 def process(inputs):
-  play_score = {
+  # 1 Rock
+  # 2 Paper
+  # 3 Scissors
+
+  move_map = {
     'X': 1,
     'Y': 2,
     'Z': 3,
+    'A': 1,
+    'B': 2,
+    'C': 3,
   }
-  play_type_map = {
-    'A': 'rock',
-    'B': 'paper',
-    'C': 'scissors',
-    'X': 'rock',
-    'Y': 'paper',
-    'Z': 'scissors',
+  win_map = {
+    1: 3,
+    2: 1,
+    3: 2,
   }
+
   outputs = []
   for i, input in enumerate(inputs):
-    print(f'input {i}:', input)
-    [y, m] = input.split(' ')
-    score = play_score[m]
-    if (play_type_map[y] == play_type_map[m]):
-      score += 3
-    elif (m == 'X' and y == 'C') or (m == 'Y' and y == 'A') or (m == 'Z' and y == 'B'):
-      score += 6
+    [a, b] = input.split(' ')
 
+    their_move = move_map[a]
+    my_move = move_map[b]
+
+    score = my_move
+    if my_move == their_move:
+      score += 3
+    elif win_map[my_move] == their_move:
+      score += 6
 
     outputs.append(score)
 
-  print(f'outputs:', outputs)
   return sum(outputs)
 
 
