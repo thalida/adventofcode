@@ -26,7 +26,7 @@ def process(inputs):
     line1 = set(inputs[i])
     line2 = set(inputs[i + 1])
     line3 = set(inputs[i + 2])
-    intersection = line1.intersection(line2).intersection(line3).pop()
+    intersection = line1.intersection(line2, line3).pop()
     num = ord(intersection)
 
     if num > 96:
