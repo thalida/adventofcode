@@ -1,5 +1,3 @@
-# https://adventofcode.com/2022/day/2
-
 import os
 from pprint import pprint
 

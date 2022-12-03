@@ -1,5 +1,3 @@
-# https://adventofcode.com/2022/day/0
-
 import os
 from pprint import pprint
 
@@ -10,12 +8,10 @@ SAMPLE_INPUTS_FILENAME = 'inputs_sample.txt'
 
 def get_inputs(filename=INPUT_FILENAME):
   filepath = os.path.join(SCRIPT_DIR, filename)
-  inputs = []
-
   with open(filepath, 'r') as f:
     inputs = f.read().splitlines()
 
-  return inputs
+  return list(inputs)
 
 
 def process(inputs):
