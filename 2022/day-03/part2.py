@@ -19,21 +19,10 @@ def get_inputs(filename=INPUT_FILENAME):
 def process(inputs):
   outputs = []
 
-  i = 0
-  while i < len(inputs):
-    line1 = set(inputs[i])
-    line2 = set(inputs[i + 1])
-    line3 = set(inputs[i + 2])
-    intersection = line1.intersection(line2, line3).pop()
-    num = ord(intersection)
-
-    if num > 96:
-      num -= 96
-    else:
-      num -= 64 - 26
-
+  for group in zip(*[iter(inputs)]*3):
+    num = ord(set.intersection(*map(set, group)).pop())
+    num -= 96 if num > 96 else 64 - 26
     outputs.append(num)
-    i += 3
 
   return sum(outputs)
 
