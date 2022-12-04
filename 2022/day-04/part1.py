@@ -24,9 +24,8 @@ def process(inputs):
     range_b = set(range(min_max_b[0], min_max_b[1] + 1))
     union = range_a.intersection(range_b)
 
-    if len(union) > 0:
-      if union == range_a or union == range_b:
-        num_overlapping += 1
+    if len(union) > 0 and (union == range_a or union == range_b):
+      num_overlapping += 1
 
   return num_overlapping
 
