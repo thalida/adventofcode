@@ -1,23 +1,21 @@
 # [Advent of Code](https://adventofcode.com/)
 
-It was a dark and stormy midnight  
+It was a dark and stormy midnight
 The winds whispered of a fierce foe
 
-By the light of the moon  
+By the light of the moon
 I stared into the abyss of code
 
-But I was not afraid  
+But I was not afraid
 For I had a plan
 
-2022 would be my year  
+2022 would be my year
 Advent of Code would be defeated
 
 maybe.
 
 Yours in codetry,
 thalida
-
-**Current Day:** 0
 
 ```
                                       ██████████
