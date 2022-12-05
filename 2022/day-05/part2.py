@@ -21,21 +21,14 @@ def get_stacks(inputs):
     if '[' not in line:
       continue
 
-    # standardize the input, replace space seperator with empty set
-    line = line.replace('    ', '[]')
-    # clean up all other spaces
-    line = line.replace(' ', '')
-    # convert to list of items
-    row_items = line[1:-1].split('][')
-
-    for (i, char) in enumerate(row_items):
+    for (i, char) in enumerate(line[1::4]):
       if i >= len(stacks):
         stacks.append([])
 
-      if len(char) == 0:
+      if len(char.strip()) == 0:
         continue
 
-      stacks[i] = stacks[i] + [char]
+      stacks[i].append(char)
 
   return stacks
 
