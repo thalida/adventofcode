@@ -1,5 +1,6 @@
 import os
 from pprint import pprint
+import re
 
 SCRIPT_DIR = os.path.dirname(__file__)
 INPUT_FILENAME = 'inputs.txt'
@@ -13,44 +14,50 @@ def get_inputs(filename=INPUT_FILENAME):
 
   return list(inputs)
 
-test_stack = [
-  ["N", "Z"],
-  ["D", "C", "M"],
-  ["P"],
-]
-
-actual_stack = [
-  ["P","D","Q","R","V","B","H","F"],
-  ["V", "W", 'Q', 'Z', 'D', 'L'],
-  ['C', 'P', 'R', 'G', 'Q', 'Z', 'L', 'H'],
-  ['B', 'V', 'J', 'F', 'H', 'D', 'R'],
-  ['C', 'L', 'W', 'Z'],
-  ['M', 'V', 'G', 'T', 'N', 'P', 'R', 'J'],
-  ['S', 'B', 'M', 'V', 'L', 'R', 'J'],
-  ['J', 'P', 'D'],
-  ['V', 'W', 'N', 'C', 'D'],
-]
-
-import re
-def process(inputs, is_test=True):
-  stacks = test_stack if is_test else actual_stack
-  output = []
+def get_stacks(inputs):
+  stacks = []
 
   for line in inputs:
-    stack = []
+    if '[' not in line:
+      continue
 
+    # standardize the input, replace space seperator with empty set
+    line = line.replace('    ', '[]')
+    # clean up all other spaces
+    line = line.replace(' ', '')
+    # convert to list of items
+    row_items = line[1:-1].split('][')
+
+    for (i, char) in enumerate(row_items):
+      if i >= len(stacks):
+        stacks.append([])
+
+      if len(char) == 0:
+        continue
+
+      stacks[i] = stacks[i] + [char]
+
+  return stacks
+
+def process(inputs, in_reverse=False):
+  output = []
+  stacks = get_stacks(inputs)
+
+  for line in inputs:
     if not line.startswith("move"):
       continue
 
     action = list(map(int, re.findall(r"move (\w+) from (\w+) to (\w+)", line)[0]))
 
+    amount = action[0]
     from_idx = action[1] - 1
     to_idx = action[2] - 1
 
-    items = stacks[from_idx][0:action[0]]
-    # items.reverse()
+    items = stacks[from_idx][:amount]
+    if in_reverse:
+      items.reverse()
 
-    stacks[from_idx] = stacks[from_idx][action[0]:]
+    stacks[from_idx] = stacks[from_idx][amount:]
     stacks[to_idx] = items + stacks[to_idx]
 
   for stack in stacks:
@@ -60,11 +67,11 @@ def process(inputs, is_test=True):
 
 
 test_inputs = get_inputs(filename=SAMPLE_INPUTS_FILENAME)
-test_answer = process(test_inputs, is_test=True)
+test_answer = process(test_inputs, in_reverse=False)
 print(f'test answer:', test_answer)
 assert test_answer == "MCD"
 
 inputs = get_inputs(filename=INPUT_FILENAME)
-answer = process(inputs, is_test=False)
+answer = process(inputs, in_reverse=False)
 print(f'answer:', answer)
 assert answer == "VHJDDCWRD"
