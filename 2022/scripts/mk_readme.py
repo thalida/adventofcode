@@ -6,7 +6,7 @@ import parsel
 import jinja2
 import html2text
 
-template_path = pathlib.Path(os.path.dirname(sys.argv[0]), './templates/README.md.jinja')
+template_path = pathlib.Path(os.path.dirname(sys.argv[0]), './templates/readmes/day.md.jinja')
 output_path = pathlib.Path(os.path.dirname(sys.argv[0]), f'../{sys.argv[2]}', 'README.md')
 
 cb_format_pattern = re.compile(r'(`.+?`)', re.S)
