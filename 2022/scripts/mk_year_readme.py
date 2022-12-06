@@ -6,7 +6,7 @@ import parsel
 import jinja2
 import html2text
 
-template_path = pathlib.Path(os.path.dirname(sys.argv[0]), './templates/readmes/index.md.jinja')
+template_path = pathlib.Path(os.path.dirname(sys.argv[0]), './templates/year.README.jinja')
 output_path = pathlib.Path(os.path.dirname(sys.argv[0]), '../README.md')
 
 def fix_formatting(text):
