@@ -11,18 +11,19 @@ def get_inputs(filename=INPUT_FILENAME):
   with open(filepath, 'r') as f:
     inputs = f.read().splitlines()
 
-  return list(inputs)
+  return list(inputs)[0]
 
 
-def process(inputs):
-  markerPos = 0
-  for (i, char) in enumerate(inputs[0]):
-    partiton = set(inputs[0][i:i+14])
-    if (len(partiton) == 14):
-      markerPos = i + 14
+def process(stream):
+  marker_size = 14
+  marker_pos = 0
+  for i in range(marker_size, len(stream)):
+    partiton = set(stream[i-marker_size:i])
+    if len(partiton) == marker_size:
+      marker_pos = i
       break
 
-  return markerPos
+  return marker_pos
 
 
 test_inputs = get_inputs(filename=SAMPLE_INPUTS_FILENAME)
