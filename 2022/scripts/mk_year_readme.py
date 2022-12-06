@@ -15,11 +15,14 @@ def fix_formatting(text):
 h2t = html2text.HTML2Text()
 h2t.ignore_links = True
 calendar_html = parsel.Selector(text=open(sys.argv[1]).read()).css('.calendar')
+calendar_html.css('#calendar-countdown').drop()
+
 calendar = h2t.handle(calendar_html[0].extract().strip())
+calendar = fix_formatting(calendar)
 
 tm = jinja2.Template(open(template_path).read())
 readme_template = tm.render(
-    calendar=fix_formatting(calendar),
+    calendar=calendar,
 )
 
 with open(output_path, 'w') as f:
