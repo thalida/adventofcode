@@ -36,14 +36,17 @@ def process(inputs):
         continue
 
       col = [grid[i][x] for i in range(num_rows)]
-      shortest_dir = min([
+      # get the tallest tree in each direction
+      tallest_trees = [
         max(col[:y]),
         max(col[y+1:]),
         max(row[:x]),
         max(row[x+1:]),
-      ])
+      ]
 
-      if shortest_dir < tree:
+      # Check if the current tree is taller than the shortest side
+      shortest_side = min(tallest_trees)
+      if shortest_side < tree:
         num_visible_trees += 1
 
   return num_visible_trees

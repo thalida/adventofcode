@@ -38,10 +38,12 @@ def process(inputs):
   max_score = 0
 
   for (y, row) in enumerate(grid):
+    # Score will always be 0 for the first and last row
     if y == 0 or y == num_rows - 1:
       continue
 
     for (x, tree) in enumerate(row):
+      # Score will always be 0 for the first and last column
       if x == 0 or x == len(row) - 1:
         continue
 
@@ -57,12 +59,15 @@ def process(inputs):
       top.reverse()
       left.reverse()
 
+      # Calculate the score for each direction
+      # Then multiply them together
       score = math.prod([
         calc_score(left, tree),
         calc_score(right, tree),
         calc_score(top, tree),
         calc_score(bottom, tree),
       ])
+
       max_score = max(max_score, score)
 
   return max_score
