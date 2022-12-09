@@ -21,17 +21,17 @@ def process(inputs):
   tail_poses = [[0, 0]]
 
   for line in inputs:
-    direction, amount = line[0], int(line[1:])
+    move, num_steps = line[0], int(line[1:])
 
-    for i in range(1, amount + 1):
+    for _ in range(num_steps):
       head = head_poses[-1].copy()
-      if direction == 'L':
+      if move == 'L':
         head[0] -= 1
-      elif direction == 'R':
+      elif move == 'R':
         head[0] += 1
-      elif direction == 'U':
+      elif move == 'U':
         head[1] += 1
-      elif direction == 'D':
+      elif move == 'D':
         head[1] -= 1
 
       head_poses.append(head)
@@ -57,7 +57,7 @@ def process(inputs):
 
       tail_poses.append(tail)
 
-  return len(set(map(lambda x: f'{x[0]},{x[1]}', tail_poses)))
+  return len(set(map(lambda pos: f'{pos[0]},{pos[1]}', tail_poses)))
 
 
 test_inputs = get_inputs(filename=SAMPLE_INPUTS_FILENAME)

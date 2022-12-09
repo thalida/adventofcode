@@ -21,18 +21,18 @@ def process(inputs):
   knots = { i: [[0, 0]] for i in range(num_knots) }
 
   for line in inputs:
-    direction, amount = line[0], int(line[1:])
+    move, num_steps = line[0], int(line[1:])
 
-    for i in range(1, amount + 1):
+    for _ in range(num_steps):
       head = knots[0][-1].copy()
 
-      if direction == 'L':
+      if move == 'L':
         head[0] -= 1
-      elif direction == 'R':
+      elif move == 'R':
         head[0] += 1
-      elif direction == 'U':
+      elif move == 'U':
         head[1] += 1
-      elif direction == 'D':
+      elif move == 'D':
         head[1] -= 1
 
       knots[0].append(head)
@@ -60,7 +60,7 @@ def process(inputs):
 
         knots[j].append(curr_knot)
 
-  return len(set(map(lambda p: f'{p[0]},{p[1]}', knots[9])))
+  return len(set(map(lambda pos: f'{pos[0]},{pos[1]}', knots[9])))
 
 
 test_inputs = get_inputs(filename=SAMPLE_INPUTS_FILENAME)
