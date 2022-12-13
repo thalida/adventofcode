@@ -1,6 +1,7 @@
 import os
 from pprint import pprint
 
+import ast
 from functools import cmp_to_key
 
 SCRIPT_DIR = os.path.dirname(__file__)
@@ -51,7 +52,7 @@ def get_packets(inputs):
     if len(line) == 0:
       continue
 
-    packets.append(eval(line))
+    packets.append(ast.literal_eval(line))
 
   packets.append([[2]])
   packets.append([[6]])

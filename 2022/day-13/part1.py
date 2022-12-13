@@ -1,6 +1,8 @@
 import os
 from pprint import pprint
 
+import ast
+
 SCRIPT_DIR = os.path.dirname(__file__)
 INPUT_FILENAME = 'inputs.txt'
 SAMPLE_INPUTS_FILENAME = 'inputs_sample.txt'
@@ -20,7 +22,7 @@ def get_packets(inputs):
     if len(line) == 0:
       continue
 
-    packets.append(eval(line))
+    packets.append(ast.literal_eval(line))
 
   return packets
 
