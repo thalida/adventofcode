@@ -13,59 +13,25 @@ def get_inputs(filename=INPUT_FILENAME):
 
   return list(inputs)
 
-def parse_packet(line):
-  packet = []
-  i = 0
-  while i < len(line) - 1 and len(line) > 0:
-    char = line[i]
+def get_packets(inputs):
+  packets = []
 
-    if char == ',':
-      i += 1
-      continue
-
-    if char == '[':
-      nested_packet, line = parse_packet(line[i+1:])
-      packet.append(nested_packet)
-      i = 0
-      continue
-
-    if char == ']':
-      return packet, line[i+1:]
-
-    next_comma = line.index(',', i) if ',' in line[i:] else len(line)
-    next_bracket = line.index(']', i) if ']' in line[i:] else len(line)
-    end = min(next_comma, next_bracket)
-    ss = line[i:end]
-    packet.append(int(ss) if ss.isdigit() else ss)
-    i += len(ss)
-
-  return packet, line[i+1:]
-
-
-def get_packet_pairs(inputs):
-  packet_pairs = []
-  packet_i = 0
   for line in inputs:
     if len(line) == 0:
-      packet_i += 1
       continue
 
-    if len(packet_pairs) <= packet_i:
-      packet_pairs.append([])
+    packets.append(eval(line))
 
-    packet = parse_packet(line)
-    packet_pairs[packet_i].append(packet[0][0])
-
-  return packet_pairs
+  return packets
 
 
-def validate_packet_pair(packet_pair):
+def validate_packet_pair(left_packet, right_packet):
   is_valid = False
   continue_loop = True
 
   while continue_loop:
-    left_size = len(packet_pair[0])
-    right_size = len(packet_pair[1])
+    left_size = len(left_packet)
+    right_size = len(right_packet)
 
     if left_size == 0 and left_size < right_size:
       is_valid = True
@@ -82,36 +48,37 @@ def validate_packet_pair(packet_pair):
       continue_loop = True
       break
 
-    left = packet_pair[0].pop(0)
-    right = packet_pair[1].pop(0)
+    left = left_packet.pop(0)
+    right = right_packet.pop(0)
 
     if isinstance(left, int) and isinstance(right, int):
       is_valid = left < right
       continue_loop = left == right
 
     elif isinstance(left, list) and isinstance(right, list):
-      is_valid, continue_loop = validate_packet_pair([left, right])
+      is_valid, continue_loop = validate_packet_pair(left, right)
 
     elif isinstance(left, list) and isinstance(right, int):
       new_left = left
       new_right = [right]
-      is_valid, continue_loop = validate_packet_pair([new_left, new_right])
+      is_valid, continue_loop = validate_packet_pair(new_left, new_right)
 
     elif isinstance(left, int) and isinstance(right, list):
       new_left = [left]
       new_right = right
-      is_valid, continue_loop = validate_packet_pair([new_left, new_right])
+      is_valid, continue_loop = validate_packet_pair(new_left, new_right)
 
   return is_valid, continue_loop
 
 
 def process(inputs, debug=False):
   outputs = inputs.copy()
-  packet_pairs = get_packet_pairs(inputs)
+  packets = get_packets(inputs)
+  packet_pairs = zip(*[iter(packets)]*2)
 
   valid_indexes = []
-  for i, packet_pair in enumerate(packet_pairs):
-    is_valid, _ = validate_packet_pair(packet_pair.copy())
+  for i, (a, b) in enumerate(packet_pairs):
+    is_valid, _ = validate_packet_pair(a, b)
     if is_valid:
       valid_indexes.append(i+1)
 

@@ -51,38 +51,33 @@ def get_packets(inputs):
     if len(line) == 0:
       continue
 
-    packet = parse_packet(line)
-    packets.append(packet[0][0])
+    packets.append(eval(line))
 
   packets.append([[2]])
   packets.append([[6]])
 
   return packets
 
-
-# -1 is true (valid)
-# 1 is false (invalid)
-# 0 is equal (valid)
-def validate_packet_pair(left_packet_in, right_packet_in):
-  is_valid = 0
+def compare_packets(left_packet_in, right_packet_in):
+  state = 0
 
   left_packet = left_packet_in.copy()
   right_packet = right_packet_in.copy()
 
-  while is_valid == 0:
+  while state == 0:
     left_size = len(left_packet)
     right_size = len(right_packet)
 
     if left_size == 0 and left_size < right_size:
-      is_valid = -1
+      state = -1
       break
 
     if right_size == 0 and right_size < left_size:
-      is_valid = 1
+      state = 1
       break
 
     if left_size == 0 and right_size == 0:
-      is_valid = 0
+      state = 0
       break
 
     left = left_packet.pop(0)
@@ -90,27 +85,27 @@ def validate_packet_pair(left_packet_in, right_packet_in):
 
     if isinstance(left, int) and isinstance(right, int):
       diff = left - right
-      is_valid = 0 if diff == 0 else -1 if diff < 0 else 1
+      state = 0 if diff == 0 else -1 if diff < 0 else 1
 
     elif isinstance(left, list) and isinstance(right, list):
-      is_valid = validate_packet_pair(left, right)
+      state = compare_packets(left, right)
 
     elif isinstance(left, list) and isinstance(right, int):
       new_left = left
       new_right = [right]
-      is_valid = validate_packet_pair(new_left, new_right)
+      state = compare_packets(new_left, new_right)
 
     elif isinstance(left, int) and isinstance(right, list):
       new_left = [left]
       new_right = right
-      is_valid = validate_packet_pair(new_left, new_right)
+      state = compare_packets(new_left, new_right)
 
-  return is_valid
+  return state
 
 def process(inputs):
   outputs = inputs.copy()
   packets = get_packets(inputs)
-  sorted_packets = sorted(packets, key=cmp_to_key(validate_packet_pair))
+  sorted_packets = sorted(packets, key=cmp_to_key(compare_packets))
 
   decoder_a = sorted_packets.index([[2]]) + 1
   decoder_b = sorted_packets.index([[6]]) + 1
