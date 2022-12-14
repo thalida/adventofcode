@@ -73,6 +73,7 @@ def get_grid(start, rocks):
 
   return grid, (start[0] - min_x, start[1] - min_y)
 
+
 def print_grid(grid, start_pos):
   for x, row in enumerate(grid):
     row_str = ''.join(row)
@@ -80,8 +81,11 @@ def print_grid(grid, start_pos):
       row_str = row_str[:start_pos[0]] + '+' + row_str[start_pos[0]+1:]
     print(row_str)
 
+
 def is_filled(grid, pos):
-  return grid[pos[1]][pos[0]] == '#' or grid[pos[1]][pos[0]] == 'o'
+  x, y = pos
+  return grid[y][x] == '#' or grid[y][x] == 'o'
+
 
 def process(inputs):
   start = [500, 0]
@@ -92,47 +96,35 @@ def process(inputs):
   num_cols = len(grid[0])
   num_rows = len(grid)
 
-  i = 0
+  num_sand = 0
   found_void = False
+  pos = start_pos
   while not found_void:
-    pos = start_pos
-    is_stopped = False
+    x, y = pos
 
+    found_void = x - 1 < 0 or x + 1 >= num_cols or y + 1 >= num_rows
     if found_void:
       break
 
-    while not is_stopped:
-      x, y = pos
+    can_move_down = not is_filled(grid, (x, y + 1))
+    can_move_left_diag = not is_filled(grid, (x - 1, y + 1))
+    can_move_right_diag = not is_filled(grid, (x + 1, y + 1))
 
-      is_void = x - 1 < 0 or x + 1 >= num_cols or y + 1 >= num_rows
-      if is_void:
-        found_void = True
-        break
+    if not can_move_down and not can_move_left_diag and not can_move_right_diag:
+      grid[y][x] = 'o'
+      num_sand += 1
+      pos = start_pos
+      continue
 
-      can_move_down = not is_filled(grid, (x, y + 1))
-      can_move_left_diag = not is_filled(grid, (x - 1, y + 1))
-      can_move_right_diag = not is_filled(grid, (x + 1, y + 1))
-
-      if not can_move_down and not can_move_left_diag and not can_move_right_diag:
-        grid[y][x] = 'o'
-        is_stopped = True
-        break
+    if can_move_down:
+      pos = (x, y + 1)
+    elif can_move_left_diag:
+      pos = (x - 1, y + 1)
+    elif can_move_right_diag:
+      pos = (x + 1, y + 1)
 
 
-      grid[y][x] = '.'
-
-      if can_move_down:
-        pos = (x, y + 1)
-      elif can_move_left_diag:
-        pos = (x - 1, y + 1)
-      elif can_move_right_diag:
-        pos = (x + 1, y + 1)
-
-      grid[y][x] = '~'
-
-    i += 1
-
-  return i - 1
+  return num_sand
 
 
 test_inputs = get_inputs(filename=SAMPLE_INPUTS_FILENAME)

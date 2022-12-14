@@ -96,52 +96,47 @@ def process(inputs):
   num_cols = len(grid[0])
   num_rows = len(grid)
 
-  i = 0
+  num_sand = 0
   found_void = False
+  pos = start_pos
   while not found_void:
-    pos = start_pos
-    is_stopped = False
+    x, y = pos
 
-    if found_void:
-      break
+    # EW: This is bad, but it's late and I'm tired
+    if x - 1 < 0:
+      grid = [['.'] + row for row in grid]
+      grid[-1] = ['#'] * len(grid[-1])
+      start_pos = (start_pos[0] + 1, start_pos[1])
+      num_cols += 1
+      x += 1
+    elif x + 1 >= num_cols:
+      grid = [row + ['.'] for row in grid]
+      grid[-1] = ['#'] * len(grid[-1])
+      num_cols += 1
 
-    while not is_stopped:
-      x, y = pos
+    can_move_down = not is_filled(grid, (x, y + 1))
+    can_move_left_diag = not is_filled(grid, (x - 1, y + 1))
+    can_move_right_diag = not is_filled(grid, (x + 1, y + 1))
 
-      if x - 1 < 0:
-        grid = [['.'] + row for row in grid]
-        grid[-1] = ['#'] * len(grid[-1])
-        start_pos = (start_pos[0] + 1, start_pos[1])
-        num_cols += 1
-        x += 1
-      elif x + 1 >= num_cols:
-        grid = [row + ['.'] for row in grid]
-        grid[-1] = ['#'] * len(grid[-1])
-        num_cols += 1
+    if not can_move_down and not can_move_left_diag and not can_move_right_diag:
+      grid[y][x] = 'o'
+      num_sand += 1
 
-      can_move_down = not is_filled(grid, (x, y + 1))
-      can_move_left_diag = not is_filled(grid, (x - 1, y + 1))
-      can_move_right_diag = not is_filled(grid, (x + 1, y + 1))
-
-      if pos == start_pos and not can_move_down and not can_move_left_diag and not can_move_right_diag:
+      if pos == start_pos:
         found_void = True
         break
 
-      if not can_move_down and not can_move_left_diag and not can_move_right_diag:
-        grid[y][x] = 'o'
-        is_stopped = True
-        break
+      pos = start_pos
+      continue
 
-      if can_move_down:
-        pos = (x, y + 1)
-      elif can_move_left_diag:
-        pos = (x - 1, y + 1)
-      elif can_move_right_diag:
-        pos = (x + 1, y + 1)
+    if can_move_down:
+      pos = (x, y + 1)
+    elif can_move_left_diag:
+      pos = (x - 1, y + 1)
+    elif can_move_right_diag:
+      pos = (x + 1, y + 1)
 
-    i += 1
-
-  return i
+  return num_sand
 
 
 test_inputs = get_inputs(filename=SAMPLE_INPUTS_FILENAME)
