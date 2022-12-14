@@ -60,53 +60,52 @@ def get_packets(inputs):
   return packets
 
 def compare_packets(left_packet_in, right_packet_in):
-  state = 0
+  is_valid = None
 
   left_packet = left_packet_in.copy()
   right_packet = right_packet_in.copy()
 
-  while state == 0:
+  while is_valid is None:
     left_size = len(left_packet)
     right_size = len(right_packet)
 
     if left_size == 0 and left_size < right_size:
-      state = -1
+      is_valid = True
       break
 
     if right_size == 0 and right_size < left_size:
-      state = 1
+      is_valid = False
       break
 
     if left_size == 0 and right_size == 0:
-      state = 0
+      is_valid = None
       break
 
     left = left_packet.pop(0)
     right = right_packet.pop(0)
 
     if isinstance(left, int) and isinstance(right, int):
-      diff = left - right
-      state = 0 if diff == 0 else -1 if diff < 0 else 1
+      is_valid = None if left == right else left < right
+      continue
 
-    elif isinstance(left, list) and isinstance(right, list):
-      state = compare_packets(left, right)
+    if isinstance(left, int):
+      left = [left]
 
-    elif isinstance(left, list) and isinstance(right, int):
-      new_left = left
-      new_right = [right]
-      state = compare_packets(new_left, new_right)
+    elif isinstance(right, int):
+      right = [right]
 
-    elif isinstance(left, int) and isinstance(right, list):
-      new_left = [left]
-      new_right = right
-      state = compare_packets(new_left, new_right)
+    is_valid = compare_packets(left, right)
 
-  return state
+  return is_valid
 
 def process(inputs):
   outputs = inputs.copy()
   packets = get_packets(inputs)
-  sorted_packets = sorted(packets, key=cmp_to_key(compare_packets))
+  def cmp (a, b):
+    is_valid = compare_packets(a, b)
+    return 0 if is_valid is None else -1 if is_valid else 1
+
+  sorted_packets = sorted(packets, key=cmp_to_key(cmp))
 
   decoder_a = sorted_packets.index([[2]]) + 1
   decoder_b = sorted_packets.index([[6]]) + 1

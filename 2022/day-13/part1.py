@@ -27,50 +27,44 @@ def get_packets(inputs):
   return packets
 
 
-def validate_packet_pair(left_packet, right_packet):
-  is_valid = False
-  continue_loop = True
+def compare_packets(left_packet_in, right_packet_in):
+  is_valid = None
 
-  while continue_loop:
+  left_packet = left_packet_in.copy()
+  right_packet = right_packet_in.copy()
+
+  while is_valid is None:
     left_size = len(left_packet)
     right_size = len(right_packet)
 
     if left_size == 0 and left_size < right_size:
       is_valid = True
-      continue_loop = False
       break
 
     if right_size == 0 and right_size < left_size:
       is_valid = False
-      continue_loop = False
       break
 
     if left_size == 0 and right_size == 0:
-      is_valid = False
-      continue_loop = True
+      is_valid = None
       break
 
     left = left_packet.pop(0)
     right = right_packet.pop(0)
 
     if isinstance(left, int) and isinstance(right, int):
-      is_valid = left < right
-      continue_loop = left == right
+      is_valid = None if left == right else left < right
+      continue
 
-    elif isinstance(left, list) and isinstance(right, list):
-      is_valid, continue_loop = validate_packet_pair(left, right)
+    if isinstance(left, int):
+      left = [left]
 
-    elif isinstance(left, list) and isinstance(right, int):
-      new_left = left
-      new_right = [right]
-      is_valid, continue_loop = validate_packet_pair(new_left, new_right)
+    elif isinstance(right, int):
+      right = [right]
 
-    elif isinstance(left, int) and isinstance(right, list):
-      new_left = [left]
-      new_right = right
-      is_valid, continue_loop = validate_packet_pair(new_left, new_right)
+    is_valid = compare_packets(left, right)
 
-  return is_valid, continue_loop
+  return is_valid
 
 
 def process(inputs, debug=False):
@@ -80,7 +74,7 @@ def process(inputs, debug=False):
 
   valid_indexes = []
   for i, (a, b) in enumerate(packet_pairs):
-    is_valid, _ = validate_packet_pair(a, b)
+    is_valid = compare_packets(a, b)
     if is_valid:
       valid_indexes.append(i+1)
 
