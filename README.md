@@ -63,6 +63,6 @@ thalida
 
 ```
 -----------------------------------------------------------------
-This ASCII snowman and flames can be found at https://textart.sh/
+This ASCII snowflake can be found at https://textart.sh/
 -----------------------------------------------------------------
 ```
