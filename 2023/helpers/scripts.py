@@ -7,8 +7,11 @@ from urllib.parse import quote
 import html2text
 import jinja2
 import parsel
+from rich import pretty
 from rich.console import Console
 from rich.text import Text
+
+pretty.install()
 
 console = Console()
 
@@ -42,7 +45,6 @@ def make_calendar(args):
 
     filepath = " ".join(args.filepath)
     extracted_html_path = Path(sys.path[0], filepath)
-    console.print(extracted_html_path)
 
     console.print(
         ":globe_with_meridians: Input:",
@@ -53,24 +55,24 @@ def make_calendar(args):
     template = templates_dir / "year.README.jinja"
     output = Path.cwd() / "README.md"
 
-    def convert_stars(text):
-        return text.replace("*", "⭐️")
+    with open(extracted_html_path, "r") as f:
+        html_file = f.read()
+        html_file = html_file.replace(
+            '<span class="calendar-mark-complete">*</span>', "⭐️"
+        )
+        html_file = html_file.replace(
+            '<span class="calendar-mark-verycomplete">*</span>', "⭐️"
+        )
+
+    calendar_html = parsel.Selector(text=html_file).css(".calendar")
+    calendar_html.css("#calendar-countdown").drop()
 
     h2t = html2text.HTML2Text()
     h2t.ignore_links = True
-
-    calendar_html = parsel.Selector(text=open(extracted_html_path).read()).css(
-        ".calendar"
-    )
-    calendar_html.css("#calendar-countdown").drop()
-
     calendar = h2t.handle(calendar_html[0].extract().strip())
-    calendar = convert_stars(calendar)
 
     tm = jinja2.Template(open(template).read())
-    formatted_calendar = tm.render(
-        calendar=calendar,
-    )
+    formatted_calendar = tm.render(calendar=calendar)
 
     with open(output, "w") as f:
         f.write(formatted_calendar)
