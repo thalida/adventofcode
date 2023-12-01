@@ -1,0 +1,30 @@
+[tool.poetry]
+name = "2023"
+version = "0.1.0"
+description = ""
+authors = ["Thalida Noel <hello@thalida.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+html2text = "^2020.1.16"
+parsel = "^1.8.1"
+Jinja2 = "^3.1.2"
+rich = "^13.7.0"
+
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.1.6"
+
+[tool.ruff]
+extend-select = ["I"]
+extend-exclude = ["helpers/templates/"]
+src = ["./api"]
+
+[tool.ruff.lint.isort]
+force-wrap-aliases = true
+combine-as-imports = true
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
