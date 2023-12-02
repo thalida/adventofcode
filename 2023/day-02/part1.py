@@ -19,10 +19,35 @@ def get_inputs(filename=INPUT_FILENAME):
 
 
 def process(inputs):
+    cubes = {
+        "red": 12,
+        "green": 13,
+        "blue": 14,
+    }
     output = 0
 
     for idx, line in enumerate(inputs):
-        pass
+        game_num = idx + 1
+        game_sets = line.split(":")[1].strip().split(";")
+        is_valid = True
+
+        for game_set in game_sets:
+            game_set = game_set.strip().split(",")
+
+            for play in game_set:
+                play = play.strip().split(" ")
+                amount = int(play[0])
+                color = play[1]
+
+                if amount > cubes[color]:
+                    is_valid = False
+                    break
+
+            if not is_valid:
+                break
+
+        if is_valid:
+            output += game_num
 
     return output
 
@@ -30,9 +55,9 @@ def process(inputs):
 test_inputs = get_inputs(filename=SAMPLE_INPUTS_FILENAME)
 test_answer = process(test_inputs)
 print("test answer:", test_answer)
-assert test_answer == 0
+assert test_answer == 8
 
 inputs = get_inputs(filename=INPUT_FILENAME)
 answer = process(inputs)
 print("answer:", answer)
-assert answer == 0
+assert answer == 2105

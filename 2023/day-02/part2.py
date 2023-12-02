@@ -1,3 +1,4 @@
+import math
 from pathlib import Path
 
 from rich import pretty, print
@@ -22,7 +23,21 @@ def process(inputs):
     output = 0
 
     for idx, line in enumerate(inputs):
-        pass
+        game_sets = line.split(":")[1].strip().split(";")
+        counts = {}
+
+        for game_set in game_sets:
+            game_set = game_set.strip().split(",")
+
+            for play in game_set:
+                play = play.strip().split(" ")
+                amount = int(play[0])
+                color = play[1]
+
+                if amount > counts.get(color, 0):
+                    counts[color] = amount
+
+        output += math.prod(counts.values())
 
     return output
 
@@ -30,9 +45,9 @@ def process(inputs):
 test_inputs = get_inputs(filename=SAMPLE_INPUTS_FILENAME)
 test_answer = process(test_inputs)
 print("test answer:", test_answer)
-assert test_answer == 0
+assert test_answer == 2286
 
 inputs = get_inputs(filename=INPUT_FILENAME)
 answer = process(inputs)
 print("answer:", answer)
-assert answer == 0
+assert answer == 72422

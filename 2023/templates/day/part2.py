@@ -19,16 +19,20 @@ def get_inputs(filename=INPUT_FILENAME):
 
 
 def process(inputs):
-    outputs = inputs.copy()
-    return outputs
+    output = 0
+
+    for idx, line in enumerate(inputs):
+        pass
+
+    return output
 
 
 test_inputs = get_inputs(filename=SAMPLE_INPUTS_FILENAME)
 test_answer = process(test_inputs)
 print("test answer:", test_answer)
-assert test_answer == []
+assert test_answer == 0
 
 inputs = get_inputs(filename=INPUT_FILENAME)
 answer = process(inputs)
 print("answer:", answer)
-assert answer == []
+assert answer == 0
