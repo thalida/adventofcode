@@ -1,3 +1,4 @@
+import re
 from collections import defaultdict
 from pathlib import Path
 
@@ -20,76 +21,53 @@ def get_inputs(filename=INPUT_FILENAME):
 
 
 def process(inputs):
-    output = 0
-
-    num_map = []
-
-    for line_idx, line in enumerate(inputs):
-        num_start = None
-        num_end = None
-        for idx, char in enumerate(line):
-            if not char.isdigit():
-                continue
-
-            if num_start is None:
-                num_start = idx
-
-            next_char = line[idx + 1] if idx + 1 < len(line) else None
-            next_char_is_digit = next_char is not None and next_char.isdigit()
-
-            if next_char_is_digit:
-                continue
-
-            num_end = idx
-
-            found_num = line[num_start : (num_end + 1)]
-            num_map.append((found_num, line_idx, num_start))
-
-            num_start = None
-            num_end = None
+    num_coords = []
+    for y, line in enumerate(inputs):
+        for m in re.finditer(r"\d+", line):
+            num_coords.append((m.group(0), y, m.start()))
 
     found_gears = defaultdict(list)
+    search_directions = [
+        [0, -1],
+        [0, 1],
+        [-1, 0],
+        [1, 0],
+        [-1, -1],
+        [-1, 1],
+        [1, -1],
+        [1, 1],
+    ]
 
-    for idx, num_set in enumerate(num_map):
-        num, line_idx, num_start = num_set
+    for coords in num_coords:
+        num, y, x = coords
 
-        search_directions = [
-            [0, -1],
-            [0, 1],
-            [-1, 0],
-            [1, 0],
-            [-1, -1],
-            [-1, 1],
-            [1, -1],
-            [1, 1],
-        ]
-
-        for char_idx, char in enumerate(str(num)):
+        for char_idx in range(len(num)):
             found_symbol = False
 
             for direction in search_directions:
-                line_idx_offset, num_start_offset = direction
+                y_offset, x_offset = direction
 
-                new_line_idx = line_idx + line_idx_offset
-                new_num_start = num_start + num_start_offset + char_idx
+                new_y = y + y_offset
+                new_x = x + x_offset + char_idx
 
-                if new_line_idx < 0 or new_line_idx >= len(inputs):
+                if new_y < 0 or new_y >= len(inputs):
                     continue
 
-                if new_num_start < 0 or new_num_start >= len(inputs[new_line_idx]):
+                if new_x < 0 or new_x >= len(inputs[new_y]):
                     continue
 
-                check_char = inputs[new_line_idx][new_num_start]
+                check_char = inputs[new_y][new_x]
 
                 if check_char == "*":
-                    found_gears[(new_line_idx, new_num_start)].append(num)
+                    found_gears[(new_y, new_x)].append(num)
                     found_symbol = True
                     break
 
             if found_symbol:
                 break
 
-    for gear, nums in found_gears.items():
+    output = 0
+    for nums in found_gears.values():
         if len(nums) != 2:
             continue
 
