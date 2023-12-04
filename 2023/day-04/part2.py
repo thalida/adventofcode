@@ -29,10 +29,10 @@ def process(inputs):
 
         num_sets = line.split(":")[1].strip().split("|")
 
-        winning_nums = set(num_sets[0].strip().split(" "))
-        have_nums = set(num_sets[1].strip().split(" "))
+        winning_nums = set(num_sets[0].strip().split())
+        have_nums = set(num_sets[1].strip().split())
 
-        matching_nums = winning_nums.intersection(have_nums) - set([""])
+        matching_nums = winning_nums.intersection(have_nums)
         num_matches = len(matching_nums)
 
         if num_matches == 0:
