@@ -33,10 +33,12 @@ def process(inputs):
         if num_matches == 0:
             continue
 
-        score = 1
-        for _ in range(1, num_matches):
-            score *= 2
+        # Original Logic: Keeping this here for posterity
+        # score = 1
+        # for _ in range(1, num_matches):
+        #     score *= 2
 
+        score = 2 ** (num_matches - 1)
         output += score
 
     return output
