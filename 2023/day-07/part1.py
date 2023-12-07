@@ -1,4 +1,4 @@
-from collections import Counter, defaultdict
+from collections import Counter
 from pathlib import Path
 
 from rich import pretty, print
@@ -21,9 +21,9 @@ def get_inputs(filename=INPUT_FILENAME):
 
 def process(inputs):
     strengths = ["A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2"]
+    strengths.reverse()
 
-    by_sets = defaultdict(list)
-    for idx, line in enumerate(inputs):
+    def sort_fn(line):
         hand = line.split()[0]
         card_counts = Counter(hand)
 
@@ -34,22 +34,17 @@ def process(inputs):
         if largest_set < 4 and num_single_cards < 2:
             largest_set += 0.5
 
-        by_sets[largest_set].append(line)
+        # sort first by largest set, then by card strengths
+        return [largest_set] + [strengths.index(card) for card in hand]
 
-    by_strength = []
-    for k in sorted(by_sets.keys()):
-        lines = by_sets[k]
-        sorted_line_hands = sorted(
-            lines,
-            key=lambda line: [strengths.index(card) for card in line.split()[0]],
-            reverse=True,
-        )
-
-        by_strength += sorted_line_hands
+    sorted_cards = sorted(
+        inputs,
+        key=sort_fn,
+    )
 
     score = 0
-    for idx, line in enumerate(by_strength):
-        hand, bid = line.split()
+    for idx, line in enumerate(sorted_cards):
+        bid = line.split()[1]
         score += int(bid) * (idx + 1)
 
     return score
