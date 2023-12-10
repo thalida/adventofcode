@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+cmd_args=("$@")
+
+if [ ${#cmd_args[@]} -ne 2 ]; then
+    echo "Usage: start <DAY> <PART>"
+    exit 1
+fi
+
+DAY=${cmd_args[0]}
+PART=${cmd_args[1]}
+
+cd /workspaces/adventofcode/2023
+nodemon --exec poetry run python day-${DAY}/part${PART}.py
