@@ -1,16 +1,18 @@
-# 2023
+# [2023](https://adventofcode.com/2023)
+
+## Calendar
 
 ```click
                                                      
                                                      
+                ..                                   
+        .'                                           
                                                      
-                                                     
-                                                     
-                                                     
-                                                     
-                                                     
-                *        ' ''...                       10
-              .   ~ ~ ~ ~   ### ''.                  
+    .'      * .         '                              12
+    '   .     '.            '                        
+        .'*                                            11 ⭐️⭐️
+        '..''''.*.''  ..'' ''...                       10 ⭐️⭐️
+              .'''~ ~ ~ ~   ### ''.                  
             .' ~  ,* ~ ~ ~ ~ ##### '.                   9 ⭐️⭐️
             : ~ '(~), ~ * ~ ~ ~ ### :                   8 ⭐️⭐️
             '. ~ " ' ~ ~ ~   ##### .'                
@@ -31,6 +33,8 @@
 ```
 
 ---
+
+## Poem & Art
 
 The time has come once again
 to try my hand at this holiday tradition
@@ -101,17 +105,51 @@ This ASCII snowflake can be found at https://textart.sh/
 
 ---
 
-## Helper Script: `make.py`
 
-### Help
-```sh
-python make.py --help
-```
+<details>
+  <summary><h2>start</h2></summary>
 
-### Commands
-| Command | Arguments | Description |
-| --- | --- | --- |
-| `--help` | | Show help message and exit. |
-| `day`/`d` | `day` | Create a new day folder. |
-| `day-readme`/`dr` | `--day`/`-d`, `--filepath`/`-f` | Create a new day README.md file. |
-| `calendar`/`c` | `--filepath`/`-f` | Create update the year README.md progress calendar. |
+  ```
+  start [day] [part]
+  ```
+
+  ### Arguments
+  | Argument | Description |
+  | --- | --- |
+  | `day` | The day folder to watch. |
+  | `part` | The part file to watch. |
+
+  ## Examples
+  ```sh
+  start 10 1
+  ```
+  Runs and watches the day 10 part 1 python script.
+
+
+  ### Commands
+  | Command | Arguments | Description |
+  | --- | --- | --- |
+  | `--help` | | Show help message and exit. |
+  | `day`/`d` | `day` | Create a new day folder. |
+  | `day-readme`/`dr` | `--day`/`-d`, `--filepath`/`-f` | Create a new day README.md file. |
+  | `calendar`/`c` | `--filepath`/`-f` | Create update the year README.md progress calendar. |
+
+</details>
+
+<details>
+  <summary><h2>make.py</h2></summary>
+
+  ### Help
+  ```sh
+  python make.py --help
+  ```
+
+  ### Commands
+  | Command | Arguments | Description |
+  | --- | --- | --- |
+  | `--help` | | Show help message and exit. |
+  | `day`/`d` | `day` | Create a new day folder. |
+  | `day-readme`/`dr` | `--day`/`-d`, `--filepath`/`-f` | Create a new day README.md file. |
+  | `calendar`/`c` | `--filepath`/`-f` | Create update the year README.md progress calendar. |
+
+</details>
