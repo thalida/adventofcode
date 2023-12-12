@@ -32,16 +32,6 @@ def process(inputs):
         ".": {},
     }
 
-    end_symbol_map = {
-        "S": ["|", "L", "F"],
-        "|": ["S", "|", "-", "L", "J", "7", "F"],
-        "-": ["S", "|", "L", "J", "F"],
-        "L": ["S", "|", "L", "J", "F"],
-        "J": ["S", "|", "-", "L", "J", "7", "F"],
-        "7": ["S", "|", "-", "L", "J", "7", "F"],
-        "F": ["S", "|", "L", "7", "F"],
-    }
-
     starting_pos = (0, 0)
     for idx, line in enumerate(inputs):
         if "S" in line:
@@ -94,63 +84,56 @@ def process(inputs):
     num_open = 0
     history  = []
     for row, line in enumerate(inputs):
-        if row == 0 or row == num_rows - 1:
-            continue
-
         open_pos = None
-        closed_on = None
+        close_pos = None
         history.append([])
-
-        first_pipe_in_row = None
-        last_pipe_in_row = None
         for col, symbol in enumerate(line):
             pos = (row, col)
 
-            if pos not in pipe:
-                continue
-
-            if first_pipe_in_row is None:
-                first_pipe_in_row = pos
-
-            last_pipe_in_row = pos
-
-        print("first_pipe_in_row:", first_pipe_in_row, "last_pipe_in_row:", last_pipe_in_row)
-
-        for col, symbol in enumerate(line):
-            pos = (row, col)
-
-            if pos[1] < first_pipe_in_row[1] or pos[1] > last_pipe_in_row[1]:
+            if row == 0 or row == num_rows - 1 or col == 0 or col == num_cols - 1:
                 continue
 
             if pos not in pipe:
-                closed_on = None
-                if open_pos is not None:
+                if open_pos is not None and close_pos is None:
                     num_open += 1
-                    print("pos:", pos, num_open)
                 continue
-
-            if open_pos is None and closed_on is not None:
-                closed_on_symbol = inputs[closed_on[0]][closed_on[1]]
-                if symbol in end_symbol_map[closed_on_symbol]:
-                    closed_on = pos
-                    continue
-
-                if symbol not in end_symbol_map[closed_on_symbol]:
-                    continue
 
             if open_pos is None:
                 open_pos = pos
-                closed_on = None
                 history[-1].append(open_pos)
                 continue
 
-            open_symbol = inputs[open_pos[0]][open_pos[1]]
-            if symbol in end_symbol_map[open_symbol]:
-                history[-1].append(pos)
-                closed_on = pos
-                open_pos = None
+            more_pipes = False
+            for c in range(1, num_cols - col):
+                p = (row, col + c)
+                if p in pipe:
+                    more_pipes = True
+                    break
+
+            if not more_pipes:
+                close_pos = pos
+                history[-1].append(close_pos)
+                continue
+
+            if open_pos is not None and close_pos is None:
+                open_symbol = inputs[open_pos[0]][open_pos[1]]
+                if "e" in valid_directions[open_symbol] and symbol in valid_directions[open_symbol]["e"]:
+                    open_pos = pos
+                    continue
+
+                close_pos = pos
+                history[-1].append(close_pos)
+                continue
+
+            # if close_pos is not None and open_pos is not None:
+            close_symbol = inputs[close_pos[0]][close_pos[1]]
+            if "e" in valid_directions[close_symbol] and symbol in valid_directions[close_symbol]["e"]:
+                close_pos = pos
+                continue
 
 
+            open_pos = None
+            close_pos = None
 
     print("history:", history)
     print("num_open:", num_open)
